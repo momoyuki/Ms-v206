@@ -42,3 +42,4 @@ Download .NET Framework 4.8 runtime: https://dotnet.microsoft.com/en-us/download
 4) Compile and move the launcher to your v206 client folder.
 
 If completed successfully, you will be able to launch MapleStory v206.
+DISCORD https://discord.com/invite/F3gxsSTuHV

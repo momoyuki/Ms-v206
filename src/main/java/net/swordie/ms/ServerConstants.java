@@ -1,5 +1,6 @@
 package net.swordie.ms;
 
+import net.swordie.ms.config.ServerSettings;
 import net.swordie.ms.constants.JobConstants;
 
 import java.util.Calendar;
@@ -13,14 +14,14 @@ public class ServerConstants {
 	public static final byte LOCALE = 8;
 	public static final String WZ_DIR = DIR + "/wz";
 	public static final String DAT_DIR = DIR + "/dat";
-	public static final int MAX_CHARACTERS = JobConstants.LoginJob.values().length * 3;
+	public static int MAX_CHARACTERS = JobConstants.LoginJob.values().length * 3;
 	public static final String SCRIPT_DIR = DIR + "/scripts";
 	public static final String RESOURCES_DIR = DIR + "/resources";
 	public static final String HANDLERS_DIR = DIR + "/src/main/java/net/swordie/ms/handlers";
 	public static final short VERSION = 206;
 	public static final String MINOR_VERSION = "1";
-	public static final int LOGIN_PORT = 8484;
-	public static final int API_PORT = 8483;
+	public static int LOGIN_PORT = 8484;
+	public static int API_PORT = 8483;
 	public static final short CHAT_PORT = 0;
 	public static final int BCRYPT_ITERATIONS = 10;
 	public static final long TOKEN_EXPIRY_TIME = 60 * 24; // minutes
@@ -36,6 +37,12 @@ public class ServerConstants {
 		c.set(Calendar.SECOND, 0);
 		c.set(Calendar.MILLISECOND, 0);
 		return TimeUnit.MILLISECONDS.toMinutes(c.getTimeInMillis() - System.currentTimeMillis());
+	}
+
+	public static void apply(ServerSettings settings) {
+		MAX_CHARACTERS = settings.maxCharacters();
+		LOGIN_PORT = settings.loginPort();
+		API_PORT = settings.apiPort();
 	}
 
 }

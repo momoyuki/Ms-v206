@@ -143,10 +143,8 @@ public class Server extends Properties {
 					Path.of(System.getProperty("server.config", "config/config.yaml"))
 			);
 			ServerConfig.apply(settings);
-			GameConstants.CHANNELS_PER_WORLD = settings.channelCount();
-			GameConstants.MOB_EXP_RATE = settings.mobExpRate();
-			GameConstants.MOB_MESO_RATE = settings.mobMesoRate();
-			GameConstants.MOB_DROP_RATE = settings.mobDropRate();
+			ServerConstants.apply(settings);
+			GameConstants.apply(settings);
 		} catch (IOException exception) {
 			throw new IllegalStateException("Unable to load server configuration.", exception);
 		}

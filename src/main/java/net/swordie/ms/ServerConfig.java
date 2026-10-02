@@ -9,7 +9,7 @@ import net.swordie.ms.world.World;
  */
 public class ServerConfig {
 
-    public static final int USER_LIMIT = 20;
+    public static int USER_LIMIT = 20;
     public static WorldId WORLD_ID = WorldId.Bera;
     public static String SERVER_NAME = "v206";
     public static String SERVER_MSG = "v206";
@@ -19,6 +19,7 @@ public class ServerConfig {
     public static final String HEAP_DUMP_DIR = "../heapdumps";
 
     public static void apply(net.swordie.ms.config.ServerSettings settings) {
+        USER_LIMIT = settings.userLimit();
         WORLD_ID = settings.worldId();
         SERVER_NAME = settings.serverName();
         SERVER_MSG = settings.serverMessage();

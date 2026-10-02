@@ -1,6 +1,7 @@
 package net.swordie.ms.constants;
 
 import net.swordie.ms.ServerConstants;
+import net.swordie.ms.config.ServerSettings;
 import net.swordie.ms.client.character.Char;
 import net.swordie.ms.client.character.items.Equip;
 import net.swordie.ms.connection.packet.QuickMoveInfo;
@@ -41,8 +42,8 @@ public class GameConstants {
     public static final int MAX_CHAR_SLOT_SIZE = 40;
 
     // Custom
-    public static final int PLAYER_START_MAP = 4000011; // Maple Tree Hill
-    public static final int PLAYER_HUB_MAP = 100000000; // Henesys
+    public static int PLAYER_START_MAP = 4000011; // Maple Tree Hill
+    public static int PLAYER_HUB_MAP = 100000000; // Henesys
 
     // GameMaster
     public static final boolean HIDE_ON_LOGIN = false;
@@ -76,8 +77,8 @@ public class GameConstants {
     // Drop
     public static final int DROP_HEIGHT = 100; // was 20
     public static final int DROP_DIFF = 25;
-    public static final int DROP_REMAIN_ON_GROUND_TIME = 120; // 2 minutes
-    public static final int DROP_REMOVE_OWNERSHIP_TIME = 30; // 30 sec
+    public static int DROP_REMAIN_ON_GROUND_TIME = 120; // 2 minutes
+    public static int DROP_REMOVE_OWNERSHIP_TIME = 30; // 30 sec
     public static final int MIN_MONEY_MULT = 6;
     public static final int MAX_MONEY_MULT = 9;
     public static final int MAX_DROP_CHANCE = 10000;
@@ -108,12 +109,12 @@ public class GameConstants {
     public static final int RANDOM_EQUIP_RARE_CHANCE = 8; // out of a 100
 
     // Random Portal
-    public static final int RANDOM_PORTAL_SPAWN_CHANCE = 0; // out of a 1000 (50%)
+    public static int RANDOM_PORTAL_SPAWN_CHANCE = 0; // out of a 1000 (50%)
     public static final int RANDOM_PORTAL_COOLTIME = 15 * 60 * 1000; // 15 minutes
 
     // Rune
-    public static final int RUNE_RESPAWN_TIME = 10; // minutes
-    public static final int RUNE_COOLDOWN_TIME = 0; // minutes
+    public static int RUNE_RESPAWN_TIME = 10; // minutes
+    public static int RUNE_COOLDOWN_TIME = 0; // minutes
     public static final int THUNDER_RUNE_ATTACK_DELAY = 4; // seconds
     public static final int DARKNESS_RUNE_NUMBER_OF_ELITE_MOBS_SPAWNED = 3; // number of elites spawned when activating Rune of Darkness
 
@@ -246,6 +247,20 @@ public class GameConstants {
     public static final int NODE_SELF_JOB_CHANCE = 100;
     public static final int NODE_ENFORCE_CHANCE = 60;
     public static final int NODE_SKILL_CHANCE = 30;
+
+    public static void apply(ServerSettings settings) {
+        CHANNELS_PER_WORLD = settings.channelCount();
+        MOB_EXP_RATE = settings.mobExpRate();
+        MOB_MESO_RATE = settings.mobMesoRate();
+        MOB_DROP_RATE = settings.mobDropRate();
+        PLAYER_START_MAP = settings.startMap();
+        PLAYER_HUB_MAP = settings.hubMap();
+        DROP_REMAIN_ON_GROUND_TIME = settings.remainSeconds();
+        DROP_REMOVE_OWNERSHIP_TIME = settings.ownershipSeconds();
+        RANDOM_PORTAL_SPAWN_CHANCE = settings.randomPortalChance();
+        RUNE_RESPAWN_TIME = settings.runeRespawnMinutes();
+        RUNE_COOLDOWN_TIME = settings.runeCooldownMinutes();
+    }
 
     public static long[] charExp = new long[276];
     private static int[][] enchantSuccessRates = new int[25][2];

@@ -1,0 +1,30 @@
+server:
+  name: v206
+  message: v206
+  worldId: Bera
+  channels: 10
+  userLimit: 20
+  maxCharacters: 30
+
+network:
+  loginPort: 8484
+  apiPort: 8483
+
+rates:
+  mobExp: 50
+  mobMeso: 2
+  mobDrop: 1
+
+gameplay:
+  hideGmOnLogin: false
+  startMap: 4000011
+  hubMap: 100000000
+
+drops:
+  remainSeconds: 120
+  ownershipSeconds: 30
+
+events:
+  randomPortalChance: 0
+  runeRespawnMinutes: 10
+  runeCooldownMinutes: 0

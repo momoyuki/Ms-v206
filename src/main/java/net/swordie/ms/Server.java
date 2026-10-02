@@ -140,8 +140,7 @@ public class Server extends Properties {
 	private void loadSettings() {
 		try {
 			ServerSettings settings = ServerSettings.load(
-					Path.of(System.getProperty("server.config", "config/server.properties")),
-					System.getenv()
+					Path.of(System.getProperty("server.config", "config/config.yaml"))
 			);
 			ServerConfig.apply(settings);
 			GameConstants.CHANNELS_PER_WORLD = settings.channelCount();

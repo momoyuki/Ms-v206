@@ -29,11 +29,11 @@ services:
       DB_USER: ${MYSQL_USER}
       DB_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "${API_PORT:-8483}:8483"
-      - "${LOGIN_PORT:-8484}:8484"
-      - "${CHANNEL_PORT_RANGE:-8584-8593}:8584-8593"
+      - "${API_PORT:-8483}:${SERVER_API_PORT:-8483}"
+      - "${LOGIN_PORT:-8484}:${SERVER_LOGIN_PORT:-8484}"
+      - "${CHANNEL_PORT_RANGE:-8585-8594}:${CHANNEL_PORT_RANGE:-8585-8594}"
     volumes:
-      - ./config/server.properties:/opt/ms-v206/config/server.properties:ro
+      - ./config/config.yaml:/opt/ms-v206/config/config.yaml:ro
       - ./wz:/opt/ms-v206/wz:ro
       - ./dat:/opt/ms-v206/dat:ro
       - ./resources:/opt/ms-v206/resources:ro

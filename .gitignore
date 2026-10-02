@@ -6,6 +6,11 @@ build/
 !**/src/test/**/build/
 Chat.txt
 ErrorCodes.txt
+.env
+config/server.properties
+backups/
+database/docker-db-data/
+.superpowers/
 
 ### STS ###
 .apt_generated

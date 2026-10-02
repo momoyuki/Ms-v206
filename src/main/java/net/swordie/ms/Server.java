@@ -4,6 +4,7 @@ import net.swordie.ms.client.Account;
 import net.swordie.ms.client.Client;
 import net.swordie.ms.client.character.BroadcastMsg;
 import net.swordie.ms.connection.api.ApiAcceptor;
+import net.swordie.ms.config.ServerSettings;
 import net.swordie.ms.connection.netty.ChannelHandler;
 import net.swordie.ms.connection.packet.UserLocal;
 import net.swordie.ms.client.User;
@@ -34,9 +35,11 @@ import net.swordie.ms.util.container.Tuple;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
+import java.nio.file.Path;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledFuture;
@@ -79,6 +82,7 @@ public class Server extends Properties {
 
 	private void init(String[] args) {
 		log.info("Starting server.");
+		loadSettings();
 		long startNow = System.currentTimeMillis();
 		DatabaseManager.init();
 		log.info("Loaded Hibernate in " + (System.currentTimeMillis() - startNow) + "ms");
@@ -131,6 +135,22 @@ public class Server extends Properties {
 
 		this.online = true;
 
+	}
+
+	private void loadSettings() {
+		try {
+			ServerSettings settings = ServerSettings.load(
+					Path.of(System.getProperty("server.config", "config/server.properties")),
+					System.getenv()
+			);
+			ServerConfig.apply(settings);
+			GameConstants.CHANNELS_PER_WORLD = settings.channelCount();
+			GameConstants.MOB_EXP_RATE = settings.mobExpRate();
+			GameConstants.MOB_MESO_RATE = settings.mobMesoRate();
+			GameConstants.MOB_DROP_RATE = settings.mobDropRate();
+		} catch (IOException exception) {
+			throw new IllegalStateException("Unable to load server configuration.", exception);
+		}
 	}
 
 	public ScheduledFuture getShutdownTimer() {

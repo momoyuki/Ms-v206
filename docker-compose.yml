@@ -1,0 +1,44 @@
+services:
+  db:
+    build: ./database
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    volumes:
+      - ms-v206-db-data:/var/lib/mysql
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+      - ./sql:/sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "test -f /var/lib/mysql/.ms-v206-init-complete && mysqladmin ping -h localhost -uroot -p$$MYSQL_ROOT_PASSWORD --silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+      start_period: 20s
+
+  server:
+    build: .
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: ${MYSQL_DATABASE}
+      DB_USER: ${MYSQL_USER}
+      DB_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "${API_PORT:-8483}:8483"
+      - "${LOGIN_PORT:-8484}:8484"
+      - "${CHANNEL_PORT_RANGE:-8584-8593}:8584-8593"
+    volumes:
+      - ./config/server.properties:/opt/ms-v206/config/server.properties:ro
+      - ./wz:/opt/ms-v206/wz:ro
+      - ./dat:/opt/ms-v206/dat:ro
+      - ./resources:/opt/ms-v206/resources:ro
+      - ./properties:/opt/ms-v206/properties:ro
+      - ./scripts:/opt/ms-v206/scripts:ro
+
+volumes:
+  ms-v206-db-data:

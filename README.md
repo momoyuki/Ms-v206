@@ -3,6 +3,47 @@ SALE OF THIS FONT IS PROHIBITED. IF A USER USES IT FOR SALE, THEY WILL BE UNSUBS
 # Maplestory-v206
 Source code Maplestory v206.
 
+## Docker Setup (Tailscale)
+
+This setup is for a private server shared through an existing Tailscale network. It does not install or configure Tailscale. Point the game client at this host's Tailscale IP or MagicDNS name.
+
+### Prerequisites
+
+- Docker Desktop with Docker Compose v2
+- Tailscale connected on the server host and each player's machine
+
+### Quick Start
+
+```powershell
+git clone https://github.com/momoyuki/Ms-v206.git
+cd Ms-v206
+.\scripts\setup.ps1
+# Edit .env and config/server.properties before the first start.
+.\scripts\start.ps1
+.\scripts\logs.ps1
+```
+
+`docker compose down` stops the services but preserves the `ms-v206-db-data` Docker volume and all player data. `scripts/reset-db.ps1` is destructive: it removes that volume and permanently deletes database data.
+
+### Configuration
+
+| Setting | File | Effect |
+| --- | --- | --- |
+| Database credentials | `.env` | Used on first database initialization; restart services after changes. |
+| Host game ports | `.env` | Restart services after changes. |
+| Server name, message, world, channels, rates | `config/server.properties` | Restart `server` after changes. |
+
+`setup.ps1` synchronizes `CHANNEL_PORT_RANGE` with `channels`. The default ten channels use ports `8584-8593`; login uses `8484` and API uses `8483`. MySQL is intentionally not published to the host.
+
+### Operations
+
+```powershell
+.\scripts\stop.ps1
+.\scripts\start.ps1
+.\scripts\backup-db.ps1
+.\scripts\reset-db.ps1
+```
+
 # [Features]
 
 All Classes can be created. Some might not work as intended

@@ -10,11 +10,18 @@ import net.swordie.ms.world.World;
 public class ServerConfig {
 
     public static final int USER_LIMIT = 20;
-    public static final WorldId WORLD_ID = WorldId.Bera;
-    public static final String SERVER_NAME = "v206";
+    public static WorldId WORLD_ID = WorldId.Bera;
+    public static String SERVER_NAME = "v206";
     public static String SERVER_MSG = "v206";
-    public static final String EVENT_MSG = String.format("#bv206#k       Buffed Channels 6-10\r\n                Online Players: ");
+    public static String EVENT_MSG = String.format("#bv206#k       Buffed Channels 6-10\r\n                Online Players: ");
     public static final String RECOMMEND_MSG = "";
     public static final int MAX_CHARACTERS = 30;
     public static final String HEAP_DUMP_DIR = "../heapdumps";
+
+    public static void apply(net.swordie.ms.config.ServerSettings settings) {
+        WORLD_ID = settings.worldId();
+        SERVER_NAME = settings.serverName();
+        SERVER_MSG = settings.serverMessage();
+        EVENT_MSG = String.format("#b%s#k       Online Players: ", settings.serverName());
+    }
 }

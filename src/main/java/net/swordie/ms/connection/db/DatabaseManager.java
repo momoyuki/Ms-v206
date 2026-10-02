@@ -1,6 +1,6 @@
 package net.swordie.ms.connection.db;
 
-import com.mysql.jdbc.Connection;
+import net.swordie.ms.config.DatabaseSettings;
 import net.swordie.ms.client.Account;
 import net.swordie.ms.client.LinkSkill;
 import net.swordie.ms.client.User;
@@ -73,6 +73,7 @@ public class DatabaseManager {
 
     public static void init() {
         Configuration configuration = new Configuration().configure();
+        DatabaseSettings.fromEnvironment(System.getenv()).applyTo(configuration);
         configuration.setProperty("autoReconnect", "true");
         Class[] dbClasses = new Class[]{
                 User.class,

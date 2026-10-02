@@ -44,7 +44,7 @@ events:
 ## Configuration Boundaries
 
 - `.env` remains the only source for database credentials and Docker host port mappings.
-- `config/config.yaml` contains non-secret gameplay and server-operation settings.
+- `config/config.yaml` contains non-secret gameplay and server-operation settings, including the ports on which the Java server listens inside its container.
 - Every YAML value has the same default as the currently committed Java constant.
 - Missing configuration uses defaults; malformed YAML or invalid values terminates startup with an actionable field-specific error.
 - All YAML changes require `docker compose restart server`; port changes also require `docker compose up -d` so Compose applies host mappings.
@@ -55,7 +55,7 @@ Replace the properties-based `ServerSettings` parser with a typed YAML-backed se
 
 The initial implementation changes settings consumers in `ServerConfig`, `ServerConstants`, and `GameConstants`; it does not introduce a generic reflection-based mechanism that could silently mutate arbitrary constants.
 
-`setup.ps1` creates `config/config.yaml` from `config/config.yaml.example` when absent and derives `CHANNEL_PORT_RANGE` from `server.channels`. It never overwrites an existing config file.
+`setup.ps1` creates `config/config.yaml` from `config/config.yaml.example` when absent. It reads YAML network and channel settings, then synchronizes non-secret Compose target-port variables and `CHANNEL_PORT_RANGE` in `.env`; it never overwrites existing YAML values or database credentials. With the defaults, channels listen on and publish `8585-8594` because channel ports are derived as `network.loginPort + 100 + channelId`.
 
 ## Non-Goals
 
@@ -71,6 +71,7 @@ The initial implementation changes settings consumers in `ServerConfig`, `Server
 - `worldId` must resolve to an existing `WorldId` enum constant.
 - Map IDs must be non-negative.
 - Unknown YAML properties fail fast to prevent typographical configuration that has no effect.
+- `gameplay.hideGmOnLogin` is retained only for compatibility with the previous configuration shape; the current server has no consumer for it and it must not be presented as an active operator control until that behavior exists.
 
 ## Verification
 

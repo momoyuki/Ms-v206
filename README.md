@@ -18,7 +18,7 @@ This setup is for a private server shared through an existing Tailscale network.
 git clone https://github.com/momoyuki/Ms-v206.git
 cd Ms-v206
 .\scripts\setup.ps1
-# Edit .env and config/server.properties before the first start.
+# Edit .env and config/config.yaml before the first start.
 .\scripts\start.ps1
 .\scripts\logs.ps1
 ```
@@ -29,11 +29,36 @@ cd Ms-v206
 
 | Setting | File | Effect |
 | --- | --- | --- |
-| Database credentials | `.env` | Used on first database initialization; restart services after changes. |
-| Host game ports | `.env` | Restart services after changes. |
-| Server name, message, world, channels, rates | `config/server.properties` | Restart `server` after changes. |
+| Database credentials and host game ports | `.env` | Run `setup.ps1` after changing YAML ports, then `docker compose up -d`. |
+| Server and gameplay settings | `config/config.yaml` | Restart the server after changes. |
 
-`setup.ps1` synchronizes `CHANNEL_PORT_RANGE` with `channels`. The default ten channels use ports `8584-8593`; login uses `8484` and API uses `8483`. MySQL is intentionally not published to the host.
+`setup.ps1` synchronizes `SERVER_API_PORT`, `SERVER_LOGIN_PORT`, and `CHANNEL_PORT_RANGE` from YAML while preserving database credentials and the host-facing `API_PORT` and `LOGIN_PORT` choices in `.env`. With the defaults, channels use `8585-8594` (`network.loginPort + 101` through `network.loginPort + 100 + server.channels`). MySQL is intentionally not published to the host.
+
+### `config/config.yaml`
+
+| Key | Default | Valid values | Runtime consumer |
+| --- | --- | --- | --- |
+| `server.name` | `v206` | Non-empty text | Server identity and event message |
+| `server.message` | `v206` | Non-empty text | Login server message |
+| `server.worldId` | `Bera` | Existing `WorldId` name | World selection |
+| `server.channels` | `10` | 1-100 | Channel creation and Compose port range |
+| `server.userLimit` | `20` | Positive integer | Server user limit |
+| `server.maxCharacters` | `30` | Positive integer | Account slot creation and character allocation |
+| `network.loginPort` | `8484` | 1-65435 | Login listener and derived channel listeners |
+| `network.apiPort` | `8483` | 1-65535 | API listener |
+| `rates.mobExp` | `50` | Positive integer | Mob EXP rate |
+| `rates.mobMeso` | `2` | Positive integer | Mob meso rate |
+| `rates.mobDrop` | `1` | Positive integer | Mob item drop rate |
+| `gameplay.hideGmOnLogin` | `false` | Boolean | Compatibility-only; no active runtime consumer |
+| `gameplay.startMap` | `4000011` | Non-negative map ID | New character start map |
+| `gameplay.hubMap` | `100000000` | Non-negative map ID | Hub warp destination |
+| `drops.remainSeconds` | `120` | Positive integer | Drop expiration timer |
+| `drops.ownershipSeconds` | `30` | Positive integer | Drop ownership timer |
+| `events.randomPortalChance` | `0` | 0-1000 | Random portal spawn chance |
+| `events.runeRespawnMinutes` | `10` | Positive integer | Rune respawn timer |
+| `events.runeCooldownMinutes` | `0` | Non-negative integer | Rune cooldown timer |
+
+YAML changes need `docker compose restart server`. If `network.loginPort`, `network.apiPort`, or `server.channels` changes, run `./scripts/setup.ps1` first, then `docker compose up -d`.
 
 ### Operations
 

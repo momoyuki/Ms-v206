@@ -1,0 +1,12 @@
+# Server identity
+server.name=v206
+server.message=v206
+world.id=Bera
+
+# Network: setup.ps1 synchronizes CHANNEL_PORT_RANGE in .env with this value.
+channels=10
+
+# Gameplay rates. Restart the server after changing these values.
+rate.mob.exp=50
+rate.mob.meso=2
+rate.mob.drop=1

@@ -1,0 +1,17 @@
+.git
+.idea
+.vscode
+bin
+out
+.env
+config/server.properties
+backups
+database/docker-db-data
+docs
+dat
+wz
+resources
+properties
+scripts
+sql
+database
